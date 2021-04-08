@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Express Movies</title>
+  </head>
+  <body>
+    <h2>Detail Movie</h2>
+    <div id="content"></div>
+    <br>
+    <a href="/">Back to Homepage</a>
+  </body>
+  
+  <script>
+    let pathname = window.location.pathname;
+    let split = pathname.split("/")
+
+    const detailMovie = async () => {
+      let movieId = split[2];
+
+      const response = await fetch(`http://localhost:3000/api/detail/${movieId}`);
+      const json = await response.json();
+
+      const content =`
+        <table border="1">
+          <thead>
+            <tr>
+              <td colspan="3">
+                <b>${json.Title}</b> (${json.Year}) <br>
+                <small>${json.Runtime} | ${json.Genre} | ${json.Released}</small>
+              </td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td rowspan="4"><img src=${json.Poster} height="300"></td>
+            </tr>
+            <tr>
+              <td width="450">${json.Plot}</td>
+            </tr>
+            <tr>
+              <td><b>Director</b>: ${json.Director}</td>
+            </tr>
+            <tr>
+              <td><b>Actors</b>: ${json.Actors}</td>
+            </tr>
+          </tbody>
+        </table>
+      `;
+
+      document.getElementById('content').innerHTML = document.getElementById('content').innerHTML + content;
+    }
+
+    detailMovie();
+  </script>
+</html>

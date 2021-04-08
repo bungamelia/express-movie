@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Express Movies</title>
+  </head>
+  <body>
+    <h1>Search Movie Here</h1>
+    <input type="text" name="keyword" id="keyword">
+    <button onclick="searchMovie(1)">Search</button>
+    <p id="content"></p>
+    <div id="pagination">
+    </div>
+
+    <script>
+      const searchMovie = async (page) => {
+        let keyword = document.getElementById('keyword').value;
+      
+        const url = `api/search/${keyword}/${page}`;
+        const response = await fetch(url);
+        const json = await response.json();
+  
+        const result = json.Search;
+
+        console.log(result);
+  
+        let movies = [];
+        let col = ["Title", "Year"]
+        for (let i = 0; i < result.length; i++) {
+          let datas = {
+            "id": json.Search[i]["imdbID"],
+            "title": json.Search[i]["Title"],
+            "year": json.Search[i]["Year"],
+            "poster": json.Search[i]["Poster"]
+          }
+          movies.push(datas)
+        }
+        
+        let tableDiv = document.getElementById("content");      
+        let table = document.createElement("table");
+        
+        table.border='1';
+
+        let thead = document.createElement("thead");
+        let headRow = document.createElement("tr");
+        col.forEach(function(el) {
+          let th = document.createElement("th");
+          th.appendChild(document.createTextNode(el));
+          headRow.appendChild(th);
+        });
+        thead.appendChild(headRow);
+        table.appendChild(thead); 
+
+        let tableBody = document.createElement("tbody");
+        table.appendChild(tableBody);
+          
+        for (var i=0; i < movies.length; i++){
+          var tr = document.createElement('tr');
+          tableBody.appendChild(tr);
+          
+          var td1 = document.createElement('td');
+          td1.width = '200';
+          td1.style.textAlign = 'center';
+          td1.innerHTML = `<a href="/title/${movies[i]["id"]}"><img src=${movies[i]["poster"]} height="100"><br>${movies[i]["title"]}</a>`;
+          tr.appendChild(td1);
+
+          var td2 = document.createElement('td');
+          td2.width='75';
+          td2.style.textAlign = 'center';
+          td2.appendChild(document.createTextNode(movies[i]["year"]));
+          tr.appendChild(td2);
+        }
+        tableDiv.innerHTML= "";
+        tableDiv.appendChild(table)
+
+        if(page === 1){
+          const pagination = `
+            <button onclick="searchMovie(${page}+1)">Next</button>
+          `;
+
+          document.getElementById('pagination').innerHTML = pagination;
+        } else if(page > 1) {
+          const pagination = `
+          <button onclick="searchMovie(${page}-1)">Prev</button>
+            <button onclick="searchMovie(${page}+1)">Next</button>
+          `;
+
+          document.getElementById('pagination').innerHTML = pagination;
+        }
+      }
+    </script>
+  </body>
+  
+</html>
