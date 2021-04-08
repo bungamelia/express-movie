@@ -1,35 +1,13 @@
 const mysql = require("mysql");
 
-// const connection = mysql.createConnection({
-//   host: 'us-cdbr-east-03.cleardb.com',
-//   user: 'bf4c95ea373370',
-//   password: '9c225b8e',
-//   database: 'heroku_25862cd1f241f87'
-// });
-
-
-// connection.connect(error => {
-//   if (error) throw error;
-//   console.log("Successfully connected to the database.");
-// });
-
-// module.exports = connection;
-
 var db_config = {
-  host: 'localhost',
-  user: 'root',
-  password: '',
-  database: 'test'
+  host: 'us-cdbr-east-03.cleardb.com',
+  user: 'bf4c95ea373370',
+  password: '9c225b8e',
+  database: 'heroku_25862cd1f241f87'
 };
 
-// var db_config = {
-//   host: 'us-cdbr-east-03.cleardb.com',
-//   user: 'bf4c95ea373370',
-//   password: '9c225b8e',
-//   database: 'heroku_25862cd1f241f87'
-// };
-
-var connection;
+let connection;
 
 function handleDisconnect() {
   connection = mysql.createConnection(db_config);
@@ -44,10 +22,10 @@ function handleDisconnect() {
 
   connection.on('error', function(err) {
     console.log('db error', err);
-    if(err.code === 'PROTOCOL_CONNECTION_LOST') { // Connection to the MySQL server is usually
-      handleDisconnect();                         // lost due to either server restart, or a
-    } else {                                      // connnection idle timeout (the wait_timeout
-      throw err;                                  // server variable configures this)
+    if(err.code === 'PROTOCOL_CONNECTION_LOST') {
+      handleDisconnect();
+    } else {
+      throw err;
     }
   });
 
