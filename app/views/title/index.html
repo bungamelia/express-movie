@@ -19,8 +19,9 @@
 
     const detailMovie = async () => {
       let movieId = split[2];
-
-      const response = await fetch(`http://localhost:3000/api/detail/${movieId}`);
+      let host = window.location.origin; 
+      
+      const response = await fetch(`${host}/api/detail/${movieId}`);
       const json = await response.json();
 
       const content =`
